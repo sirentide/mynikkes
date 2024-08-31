@@ -284,7 +284,10 @@ function App() {
 
   return (
     <div className="App">
-      <h1>MY NIKKE</h1>
+    <header className="App-header">
+      <h1>MY NIKKE v.1.0</h1>
+      <p>Capture the screenshot of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
+    </header>
 
       {!isImagesConfirmed ? (
         <>
