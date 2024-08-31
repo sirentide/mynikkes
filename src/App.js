@@ -15,6 +15,17 @@ const attackerCroppingAreas = {
   '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
 };
 
+const missilisattackerCroppingAreas = {
+  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 735, width: 450, height: 120 },
+  '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
+  '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
+  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
+  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
+  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
+};
+
 const defenderCroppingAreas = {
   '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
   '2. Visor': { left: 735, top: 720, width: 450, height: 120 },
@@ -27,6 +38,17 @@ const defenderCroppingAreas = {
 };
 
 const attackerTemplateLayout = {
+  '1. Portrait': { x: 0, y: 0 },
+  '2. Visor': { x: 0, y: 300 },
+  '3. Vest': { x: 450, y: 300 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
+  '6. Skill': { x: 670, y: 0 },
+  '7. Cube': { x: 800, y: 210 },
+  '8. Dolls': { x: 600, y: 265 },
+};
+
+const missilisattackerTemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
@@ -123,6 +145,8 @@ function App() {
     if (cropper) {
       const cropArea = currentMode === 'attacker'
         ? attackerCroppingAreas[key]
+        : currentMode === 'missilisattacker'
+        ? missilisattackerCroppingAreas[key]
         : currentMode === 'defender'
         ? defenderCroppingAreas[key]
         : supporterCroppingAreas[key];
@@ -141,56 +165,78 @@ function App() {
       }));
     }
   }, [currentMode]);
+  
 
-  const combineImages = () => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = FIXED_CANVAS_WIDTH;
-    canvas.height = FIXED_CANVAS_HEIGHT;
-
-    const drawOrder = [
-      '1. Portrait',
-      '2. Visor',
-      '3. Vest',
-      '4. Armguard',
-      '5. Boots',
-      '6. Skill',
-      '7. Cube',
-      '8. Dolls',
-    ];
-
-    const layout = currentMode === 'attacker'
-      ? attackerTemplateLayout
-      : currentMode === 'defender'
-      ? defenderTemplateLayout
-      : supporterTemplateLayout;
-
-    drawOrder.forEach((key, index) => {
-      const img = new Image();
-      img.src = croppedImages[key];
-      img.onload = () => {
-        const position = layout[key];
-        const cropArea = currentMode === 'attacker'
-          ? attackerCroppingAreas[key]
-          : currentMode === 'defender'
-          ? defenderCroppingAreas[key]
-          : supporterCroppingAreas[key];
-        ctx.drawImage(img, position.x, position.y, cropArea.width, cropArea.height);
-
-        if (index >= 1 && index <= 4) {
-          ctx.font = 'bold 20px Roboto';
-          ctx.fillStyle = 'red';
-          ctx.fillText(`${index}`, position.x + 10, position.y + 30);
+  
+    const combineImages = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+    
+      canvas.width = FIXED_CANVAS_WIDTH;
+      canvas.height = FIXED_CANVAS_HEIGHT;
+    
+      const drawOrder = [
+        '1. Portrait',
+        '2. Visor',
+        '3. Vest',
+        '4. Armguard',
+        '5. Boots',
+        '6. Skill',
+        '7. Cube',
+        '8. Dolls',
+      ];
+    
+      const templateLayout = currentMode === 'attacker'
+        ? attackerTemplateLayout
+        : currentMode === 'missilisattacker'
+        ? missilisattackerTemplateLayout
+        : currentMode === 'defender'
+        ? defenderTemplateLayout
+        : supporterTemplateLayout;
+    
+      const croppingAreas = currentMode === 'attacker'
+        ? attackerCroppingAreas
+        : currentMode === 'missilisattacker'
+        ? missilisattackerCroppingAreas
+        : currentMode === 'defender'
+        ? defenderCroppingAreas
+        : supporterCroppingAreas;
+    
+      let imagesLoaded = 0;
+      const totalImages = drawOrder.length;
+    
+      drawOrder.forEach((key, index) => {
+        if (croppedImages[key]) {
+          const img = new Image();
+          img.src = croppedImages[key];
+          img.onload = () => {
+            const layout = templateLayout[key];
+            const cropArea = croppingAreas[key];
+    
+            // Draw the image on the canvas
+            ctx.drawImage(img, layout.x, layout.y, cropArea.width, cropArea.height);
+    
+            // Add text annotations for specific regions
+            if (index >= 1 && index <= 4) { // For 2. Visor, 3. Vest, 4. Armguard, 5. Boots
+              ctx.font = 'bold 20px Roboto';
+              ctx.fillStyle = 'red';
+              ctx.fillText(`${index + 0}`, layout.x + 10, layout.y + 30); // Adds text to the top left of the cropped area
+            }
+    
+            // Check if it's the last image in the draw order to finalize the combined image
+            imagesLoaded++;
+            if (imagesLoaded === totalImages) {
+              const combinedImage = canvas.toDataURL();
+              setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
+            }
+          };
         }
-
-        if (key === '8. Dolls') {
-          const combinedImage = canvas.toDataURL();
-          setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
-        }
-      };
-    });
-  };
+      });
+    };
+    
+    
+  
+  
 
   // Reset all states to initial
   const resetAll = () => {
@@ -246,7 +292,7 @@ function App() {
           <div className="upload-options">
             <button onClick={() => setIsIndividualUpload(true)}>Individual Upload</button>
             <button onClick={() => setIsIndividualUpload(false)} style={{ marginLeft: '10px' }}>
-              All-in-One Upload
+              All-in-One Upload 
             </button>
           </div>
 
@@ -279,6 +325,9 @@ function App() {
       <div className="mode-switch">
         <button onClick={() => setCurrentMode('attacker')} className={currentMode === 'attacker' ? 'active' : ''}>
           Attacker
+        </button>
+        <button onClick={() => setCurrentMode('missilisattacker')} className={currentMode === 'missilisattacker' ? 'active' : ''}>
+          Missilis Attacker
         </button>
         <button onClick={() => setCurrentMode('defender')} className={currentMode === 'defender' ? 'active' : ''}>
           Defender
