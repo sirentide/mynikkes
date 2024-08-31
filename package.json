@@ -2,7 +2,7 @@
   "name": "my-nikke",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://celujean.github.io/my-nikke",
+  "homepage": "https://celujean.github.io/mynikkes",
   "dependencies": {
     "cropperjs": "^1.5.12",
     "react": "^18.2.0",
