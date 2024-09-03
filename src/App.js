@@ -7,7 +7,7 @@ import { useDropzone } from 'react-dropzone';
 const attackerCroppingAreas = {
   '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
-  '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 735, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 735, width: 450, height: 120 },
   '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
   '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
