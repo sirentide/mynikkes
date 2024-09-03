@@ -4,7 +4,7 @@ import 'cropperjs/dist/cropper.css';
 import './App.css';
 import { useDropzone } from 'react-dropzone';
 
-const attackerCroppingAreas = {
+const attacker1CroppingAreas = {
   '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 735, width: 450, height: 120 },
@@ -15,7 +15,18 @@ const attackerCroppingAreas = {
   '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
 };
 
-const missilisattackerCroppingAreas = {
+const attacker2CroppingAreas = {
+  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
+  '4. Armguard': { left: 735, top: 735, width: 450, height: 120 },
+  '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
+  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
+  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
+  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
+};
+
+const attacker3CroppingAreas = {
   '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 735, width: 450, height: 120 },
@@ -37,7 +48,19 @@ const defenderCroppingAreas = {
   '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
 };
 
-const attackerTemplateLayout = {
+const supporterCroppingAreas = {
+  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '2. Visor': { left: 735, top: 710, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
+  '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
+  '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
+  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
+  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
+  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
+};
+
+
+const attacker1TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
@@ -48,7 +71,18 @@ const attackerTemplateLayout = {
   '8. Dolls': { x: 600, y: 265 },
 };
 
-const missilisattackerTemplateLayout = {
+const attacker2TemplateLayout = {
+  '1. Portrait': { x: 0, y: 0 },
+  '2. Visor': { x: 0, y: 300 },
+  '3. Vest': { x: 450, y: 300 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
+  '6. Skill': { x: 670, y: 0 },
+  '7. Cube': { x: 800, y: 210 },
+  '8. Dolls': { x: 600, y: 265 },
+};
+
+const attacker3TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
@@ -70,17 +104,6 @@ const defenderTemplateLayout = {
   '8. Dolls': { x: 600, y: 265 },
 };
 
-const supporterCroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
-  '2. Visor': { left: 735, top: 710, width: 450, height: 120 },
-  '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
-  '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
-  '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
-  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
-  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
-  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
-};
-
 const supporterTemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
@@ -91,6 +114,8 @@ const supporterTemplateLayout = {
   '7. Cube': { x: 800, y: 210 },
   '8. Dolls': { x: 600, y: 265 },
 };
+
+
 
 const FIXED_CANVAS_WIDTH = 900;
 const FIXED_CANVAS_HEIGHT = 540;
@@ -119,7 +144,7 @@ function App() {
     const files = event.target.files;
     const images = {};
 
-    Object.keys(attackerCroppingAreas).forEach((key, index) => {
+    Object.keys(attacker1CroppingAreas).forEach((key, index) => {
       if (files[index]) {
         images[key] = URL.createObjectURL(files[index]);
       }
@@ -132,7 +157,7 @@ function App() {
   // Confirmation to proceed with cropping
   const confirmUpload = () => {
     if (!currentMode) {
-      alert('Please select a mode before uploading images.');
+      alert('Please select a crop method before uploading images.');
       return;
     }
     setIsImagesConfirmed(true);
@@ -143,10 +168,12 @@ function App() {
   const cropImage = useCallback((key) => {
     const cropper = cropperRefs.current[key]?.cropper;
     if (cropper) {
-      const cropArea = currentMode === 'attacker'
-        ? attackerCroppingAreas[key]
-        : currentMode === 'missilisattacker'
-        ? missilisattackerCroppingAreas[key]
+      const cropArea = currentMode === 'attacker1'
+        ? attacker1CroppingAreas[key]
+        : currentMode === 'attacker2'
+        ? attacker2CroppingAreas[key]
+        : currentMode === 'attacker3'
+        ? attacker3CroppingAreas[key]
         : currentMode === 'defender'
         ? defenderCroppingAreas[key]
         : supporterCroppingAreas[key];
@@ -186,18 +213,22 @@ function App() {
         '8. Dolls',
       ];
     
-      const templateLayout = currentMode === 'attacker'
-        ? attackerTemplateLayout
-        : currentMode === 'missilisattacker'
-        ? missilisattackerTemplateLayout
+      const templateLayout = currentMode === 'attacker1'
+        ? attacker1TemplateLayout
+        : currentMode === 'attacker2'
+        ? attacker2TemplateLayout
+        : currentMode === 'attacker3'
+        ? attacker3TemplateLayout
         : currentMode === 'defender'
         ? defenderTemplateLayout
         : supporterTemplateLayout;
     
-      const croppingAreas = currentMode === 'attacker'
-        ? attackerCroppingAreas
-        : currentMode === 'missilisattacker'
-        ? missilisattackerCroppingAreas
+      const croppingAreas = currentMode === 'attacker1'
+        ? attacker1CroppingAreas
+        : currentMode === 'attacker2'
+        ? attacker2CroppingAreas
+        : currentMode === 'attacker3'
+        ? attacker3CroppingAreas 
         : currentMode === 'defender'
         ? defenderCroppingAreas
         : supporterCroppingAreas;
@@ -285,7 +316,7 @@ function App() {
   return (
     <div className="App">
     <header className="App-header">
-      <h1>MY NIKKE v.1.0</h1>
+      <h1>MY NIKKE v.1.01</h1>
       <p>Capture the screenshot of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
     </header>
 
@@ -301,7 +332,7 @@ function App() {
 
           {isIndividualUpload ? (
             <div className="upload-sections">
-              {Object.keys(attackerCroppingAreas).map((key) => (
+              {Object.keys(attacker1CroppingAreas).map((key) => (
                 <UploadSection key={key} keyName={key} />
               ))}
             </div>
@@ -325,20 +356,39 @@ function App() {
           )}
 
           {/* Mode selection buttons */}
-      <div className="mode-switch">
-        <button onClick={() => setCurrentMode('attacker')} className={currentMode === 'attacker' ? 'active' : ''}>
-          Attacker 1113
-        </button>
-        <button onClick={() => setCurrentMode('missilisattacker')} className={currentMode === 'missilisattacker' ? 'active' : ''}>
-          Missilis Attacker 1133
-        </button>
-        <button onClick={() => setCurrentMode('defender')} className={currentMode === 'defender' ? 'active' : ''}>
-          Defender 2222
-        </button>
-        <button onClick={() => setCurrentMode('supporter')} className={currentMode === 'supporter' ? 'active' : ''}>
-          Supporter 3333
-        </button>
-      </div>
+          <div className="mode-switch">
+  <p className="upload-instructions2">
+    3331 for Alice
+  </p>
+  <p className="upload-instructions3">
+    3131 for Emilia, Maid privaty, S.anis(?)
+  </p>
+  <p className="upload-instructions3">
+    3311 for Ein(?)
+  </p>
+  <p className="upload-instructions3">
+    2222 for Crown
+  </p>
+  <p className="upload-instructions3">
+    3333 for Liter
+  </p>
+
+  <button onClick={() => setCurrentMode('attacker1')} className={currentMode === 'attacker1' ? 'active' : ''}>
+    Attacker 3331
+  </button>
+  <button onClick={() => setCurrentMode('attacker2')} className={currentMode === 'attacker3' ? 'active' : ''}>
+    Attacker 3131
+  </button>
+  <button onClick={() => setCurrentMode('attacker3')} className={currentMode === 'attacker2' ? 'active' : ''}>
+    Attacker 3311
+  </button>
+  <button onClick={() => setCurrentMode('defender')} className={currentMode === 'defender' ? 'active' : ''}>
+    Defender 2222
+  </button>
+  <button onClick={() => setCurrentMode('supporter')} className={currentMode === 'supporter' ? 'active' : ''}>
+    Supporter 3333
+  </button>
+</div>
 
           {Object.keys(selectedImages).length > 0 && (
             <button onClick={confirmUpload} className="confirm-button">
