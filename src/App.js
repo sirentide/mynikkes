@@ -256,7 +256,7 @@ function App() {
           if (index >= 1 && index <= 4) { // For 2. Visor, 3. Vest, 4. Armguard, 5. Boots
             ctx.font = 'bold 20px Roboto';
             ctx.fillStyle = 'red';
-            ctx.fillText(`${index + 1}`, layout.x + 10, layout.y + 30); // Adds text to the top left of the cropped area
+            ctx.fillText(`${index + 0}`, layout.x + 10, layout.y + 30); // Adds text to the top left of the cropped area
           }
   
           // Check if all images are drawn (including those that might not be loaded)
