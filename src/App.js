@@ -327,16 +327,16 @@ function App() {
           {/* Mode selection buttons */}
       <div className="mode-switch">
         <button onClick={() => setCurrentMode('attacker')} className={currentMode === 'attacker' ? 'active' : ''}>
-          Attacker
+          Attacker 1113
         </button>
         <button onClick={() => setCurrentMode('missilisattacker')} className={currentMode === 'missilisattacker' ? 'active' : ''}>
-          Missilis Attacker
+          Missilis Attacker 1133
         </button>
         <button onClick={() => setCurrentMode('defender')} className={currentMode === 'defender' ? 'active' : ''}>
-          Defender
+          Defender 2222
         </button>
         <button onClick={() => setCurrentMode('supporter')} className={currentMode === 'supporter' ? 'active' : ''}>
-          Supporter
+          Supporter 3333
         </button>
       </div>
 
