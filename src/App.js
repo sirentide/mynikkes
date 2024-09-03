@@ -164,27 +164,32 @@ function App() {
     Object.keys(selectedImages).forEach((key) => cropImage(key));
   };
 
-  // Crop images based on predefined cropping areas
   const cropImage = useCallback((key) => {
     const cropper = cropperRefs.current[key]?.cropper;
+  
+    // Ensure cropArea is defined before using it
+    let cropArea = { left: 0, top: 0, width: 0, height: 0 };
+  
+    if (currentMode === 'attacker1') {
+      cropArea = attacker1CroppingAreas[key];
+    } else if (currentMode === 'attacker2') {
+      cropArea = attacker2CroppingAreas[key];
+    } else if (currentMode === 'attacker3') {
+      cropArea = attacker3CroppingAreas[key];
+    } else if (currentMode === 'defender') {
+      cropArea = defenderCroppingAreas[key];
+    } else if (currentMode === 'supporter') {
+      cropArea = supporterCroppingAreas[key];
+    }
+  
     if (cropper) {
-      const cropArea = currentMode === 'attacker1'
-        ? attacker1CroppingAreas[key]
-        : currentMode === 'attacker2'
-        ? attacker2CroppingAreas[key]
-        : currentMode === 'attacker3'
-        ? attacker3CroppingAreas[key]
-        : currentMode === 'defender'
-        ? defenderCroppingAreas[key]
-        : supporterCroppingAreas[key];
-      
       cropper.setData({
         x: cropArea.left,
         y: cropArea.top,
         width: cropArea.width,
         height: cropArea.height,
       });
-    
+  
       const cropped = cropper.getCroppedCanvas().toDataURL();
       setCroppedImages((prev) => ({
         ...prev,
@@ -193,77 +198,86 @@ function App() {
     }
   }, [currentMode]);
   
+  
 
   
-    const combineImages = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-    
-      canvas.width = FIXED_CANVAS_WIDTH;
-      canvas.height = FIXED_CANVAS_HEIGHT;
-    
-      const drawOrder = [
-        '1. Portrait',
-        '2. Visor',
-        '3. Vest',
-        '4. Armguard',
-        '5. Boots',
-        '6. Skill',
-        '7. Cube',
-        '8. Dolls',
-      ];
-    
-      const templateLayout = currentMode === 'attacker1'
-        ? attacker1TemplateLayout
-        : currentMode === 'attacker2'
-        ? attacker2TemplateLayout
-        : currentMode === 'attacker3'
-        ? attacker3TemplateLayout
-        : currentMode === 'defender'
-        ? defenderTemplateLayout
-        : supporterTemplateLayout;
-    
-      const croppingAreas = currentMode === 'attacker1'
-        ? attacker1CroppingAreas
-        : currentMode === 'attacker2'
-        ? attacker2CroppingAreas
-        : currentMode === 'attacker3'
-        ? attacker3CroppingAreas 
-        : currentMode === 'defender'
-        ? defenderCroppingAreas
-        : supporterCroppingAreas;
-    
-      let imagesLoaded = 0;
-      const totalImages = drawOrder.length;
-    
-      drawOrder.forEach((key, index) => {
-        if (croppedImages[key]) {
-          const img = new Image();
-          img.src = croppedImages[key];
-          img.onload = () => {
-            const layout = templateLayout[key];
-            const cropArea = croppingAreas[key];
-    
-            // Draw the image on the canvas
-            ctx.drawImage(img, layout.x, layout.y, cropArea.width, cropArea.height);
-    
-            // Add text annotations for specific regions
-            if (index >= 1 && index <= 4) { // For 2. Visor, 3. Vest, 4. Armguard, 5. Boots
-              ctx.font = 'bold 20px Roboto';
-              ctx.fillStyle = 'red';
-              ctx.fillText(`${index + 0}`, layout.x + 10, layout.y + 30); // Adds text to the top left of the cropped area
-            }
-    
-            // Check if it's the last image in the draw order to finalize the combined image
-            imagesLoaded++;
-            if (imagesLoaded === totalImages) {
-              const combinedImage = canvas.toDataURL();
-              setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
-            }
-          };
+  const combineImages = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+  
+    canvas.width = FIXED_CANVAS_WIDTH;
+    canvas.height = FIXED_CANVAS_HEIGHT;
+  
+    const drawOrder = [
+      '1. Portrait',
+      '2. Visor',
+      '3. Vest',
+      '4. Armguard',
+      '5. Boots',
+      '6. Skill',
+      '7. Cube',
+      '8. Dolls',
+    ];
+  
+    const templateLayout = currentMode === 'attacker1'
+      ? attacker1TemplateLayout
+      : currentMode === 'attacker2'
+      ? attacker2TemplateLayout
+      : currentMode === 'attacker3'
+      ? attacker3TemplateLayout
+      : currentMode === 'defender'
+      ? defenderTemplateLayout
+      : supporterTemplateLayout;
+  
+    const croppingAreas = currentMode === 'attacker1'
+      ? attacker1CroppingAreas
+      : currentMode === 'attacker2'
+      ? attacker2CroppingAreas
+      : currentMode === 'attacker3'
+      ? attacker3CroppingAreas 
+      : currentMode === 'defender'
+      ? defenderCroppingAreas
+      : supporterCroppingAreas;
+  
+    let imagesLoaded = 0;
+  
+    drawOrder.forEach((key, index) => {
+      if (croppedImages[key]) {
+        const img = new Image();
+        img.src = croppedImages[key];
+        img.onload = () => {
+          const layout = templateLayout[key];
+          const cropArea = croppingAreas[key];
+  
+          // Draw the image on the canvas
+          ctx.drawImage(img, layout.x, layout.y, cropArea.width, cropArea.height);
+  
+          // Add text annotations for specific regions
+          if (index >= 1 && index <= 4) { // For 2. Visor, 3. Vest, 4. Armguard, 5. Boots
+            ctx.font = 'bold 20px Roboto';
+            ctx.fillStyle = 'red';
+            ctx.fillText(`${index + 1}`, layout.x + 10, layout.y + 30); // Adds text to the top left of the cropped area
+          }
+  
+          // Check if all images are drawn (including those that might not be loaded)
+          imagesLoaded++;
+          if (imagesLoaded >= drawOrder.length) {
+            const combinedImage = canvas.toDataURL();
+            setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
+          }
+        };
+      } else {
+        // Increment the count for images that are not available
+        imagesLoaded++;
+        // Check if all images are drawn (including those that might not be loaded)
+        if (imagesLoaded >= drawOrder.length) {
+          const combinedImage = canvas.toDataURL();
+          setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
         }
-      });
-    };
+      }
+    });
+  };
+  
     
     
   
@@ -433,4 +447,8 @@ function App() {
   );
 }
 
+
+
 export default App;
+
+
