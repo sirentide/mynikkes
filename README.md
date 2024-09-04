@@ -10,7 +10,7 @@ I’ve created a web app that automatically crops images for Nikke.
 # How to Use:
 - The quickest method is shown in the video linked below.
 
-[![Watch the video](https://i.imgur.com/SyEAPLC.png)](https://youtu.be/21UijHaiLMY)
+[![Watch the video](https://i.imgur.com/6kakQ7a.png)](https://youtu.be/21UijHaiLMY)
 
 Note: If your characters aren’t fully overloaded, you’ll need to upload them individually for a clean version. If you don’t mind a less clean version, you can skip this.
 
