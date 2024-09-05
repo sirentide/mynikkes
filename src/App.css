@@ -98,24 +98,25 @@ h1 {
 .upload-input {
   padding: 8px;
   font-size: 1rem;
+  text-align: center;
 }
 
 .upload-instructions {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #666;
-  margin-top: 10px;
+  margin-top: 2px;
 }
 
 .upload-instructions2 {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #666;
-  margin-top: 10px;
+  margin-top: 2px;
 }
 
 .upload-instructions3 {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #666;
-  margin-top: 10px;
+  margin-top: 2px;
 }
 
 .confirm-button,
@@ -164,4 +165,40 @@ button.reset-button {
 
 button.reset-button:hover {
   background-color: #c82333;
+}
+
+.mode-switch button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-switch button:hover {
+  background-color: #e6e6e6;
+  border-color: #999;
+}
+
+.mode-switch button.active {
+  background-color: #4caf50; /* Change this to your preferred active color */
+  color: white;
+  border-color: #4caf50;
+}
+
+.mode-switch button:disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Additional styles for a cleaner layout */
+.mode-switch {
+  text-align: center;
+  margin-top: 20px;
 }

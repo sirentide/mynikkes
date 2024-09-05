@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './App.css';
@@ -128,34 +128,8 @@ function App() {
   const [currentMode, setCurrentMode] = useState('');
   const cropperRefs = useRef({});
 
-
-  const handleModeSelection = (mode) => {
-    setCurrentMode(mode);
-    setIsImagesConfirmed(false);
-    setCroppedImages({});
-    
-    // Reset cropper instances and start cropping again
-    if (Object.keys(selectedImages).length > 0) {
-      Object.keys(selectedImages).forEach((key) => {
-        if (cropperRefs.current[key]?.cropper) {
-          cropperRefs.current[key]?.cropper.reset(); // Reset each cropper instance
-        }
-      });
-    }
-  };
-  
-  
-  
-  
-  
-
   // Handle individual image upload via file input or drag-and-drop
   const handleImageUpload = (file, key) => {
-    if (!currentMode) {
-      alert('Please select a mode before uploading images.');
-      return;
-    }
-  
     if (file) {
       const imageURL = URL.createObjectURL(file);
       setSelectedImages((prev) => ({
@@ -164,108 +138,75 @@ function App() {
       }));
     }
   };
-  
+
+  // Handler for file input change (all-in-one upload)
   const handleAllInOneUpload = (event) => {
-    if (!currentMode) {
-      alert('Please select a mode before uploading images.');
-      return;
-    }
-  
     const files = event.target.files;
     const images = {};
-  
+
     Object.keys(attacker1CroppingAreas).forEach((key, index) => {
       if (files[index]) {
         images[key] = URL.createObjectURL(files[index]);
       }
     });
-  
+
     setSelectedImages(images);
     setIsIndividualUpload(false);
-    setIsImagesConfirmed(true); // Automatically confirm images
   };
-  
-  
-  
-  
-  
 
   // Confirmation to proceed with cropping
   const confirmUpload = () => {
     if (!currentMode) {
-      alert('Please select a mode before uploading images.');
+      alert('Please select a crop method before uploading images.');
       return;
     }
-  
     setIsImagesConfirmed(true);
-    // Trigger cropping for all images again
     Object.keys(selectedImages).forEach((key) => cropImage(key));
   };
-  
-  
 
   const cropImage = useCallback((key) => {
     const cropper = cropperRefs.current[key]?.cropper;
-    
-    if (!cropper) {
-      console.error(`Cropper instance for ${key} is not available`);
-      return;
+  
+    // Ensure cropArea is defined before using it
+    let cropArea = { left: 0, top: 0, width: 0, height: 0 };
+  
+    if (currentMode === 'attacker1') {
+      cropArea = attacker1CroppingAreas[key];
+    } else if (currentMode === 'attacker2') {
+      cropArea = attacker2CroppingAreas[key];
+    } else if (currentMode === 'attacker3') {
+      cropArea = attacker3CroppingAreas[key];
+    } else if (currentMode === 'defender') {
+      cropArea = defenderCroppingAreas[key];
+    } else if (currentMode === 'supporter') {
+      cropArea = supporterCroppingAreas[key];
     }
-    
-    const cropArea = (currentMode === 'attacker1' ? attacker1CroppingAreas : 
-      currentMode === 'attacker2' ? attacker2CroppingAreas :
-      currentMode === 'attacker3' ? attacker3CroppingAreas :
-      currentMode === 'defender' ? defenderCroppingAreas :
-      supporterCroppingAreas)[key];
-    
-      if (cropArea) {
-        cropper.setData({
-          x: cropArea.left,
-          y: cropArea.top,
-          width: cropArea.width,
-          height: cropArea.height,
-        });
-      
-        const croppedCanvas = cropper.getCroppedCanvas();
-        if (croppedCanvas) {
-          const cropped = croppedCanvas.toDataURL();
-          setCroppedImages((prev) => ({
-            ...prev,
-            [key]: cropped,
-          }));
-        } else {
-          console.error(`Failed to get cropped canvas for ${key}`);
-        }
-      } else {
-        console.error(`No crop area defined for ${key}`);
-      }
-    }, [currentMode]);
   
+    if (cropper) {
+      cropper.setData({
+        x: cropArea.left,
+        y: cropArea.top,
+        width: cropArea.width,
+        height: cropArea.height,
+      });
   
-  // Reset cropping on mode change
-  useEffect(() => {
-    if (currentMode && Object.keys(selectedImages).length > 0) {
-      // Reset cropped images
-      setCroppedImages({});
-      // Re-trigger cropping
-      Object.keys(selectedImages).forEach((key) => cropImage(key));
+      const cropped = cropper.getCroppedCanvas().toDataURL();
+      setCroppedImages((prev) => ({
+        ...prev,
+        [key]: cropped,
+      }));
     }
-  }, [currentMode, selectedImages, cropImage]);
-
-   
-  
+  }, [currentMode]);
   
   
 
   
+  const combineImages = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
   
-
-  
-    const combineImages = useCallback(() => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = FIXED_CANVAS_WIDTH;
-      canvas.height = FIXED_CANVAS_HEIGHT;
+    canvas.width = FIXED_CANVAS_WIDTH;
+    canvas.height = FIXED_CANVAS_HEIGHT;
   
     const drawOrder = [
       '1. Portrait',
@@ -293,7 +234,7 @@ function App() {
       : currentMode === 'attacker2'
       ? attacker2CroppingAreas
       : currentMode === 'attacker3'
-      ? attacker3CroppingAreas
+      ? attacker3CroppingAreas 
       : currentMode === 'defender'
       ? defenderCroppingAreas
       : supporterCroppingAreas;
@@ -308,14 +249,17 @@ function App() {
           const layout = templateLayout[key];
           const cropArea = croppingAreas[key];
   
+          // Draw the image on the canvas
           ctx.drawImage(img, layout.x, layout.y, cropArea.width, cropArea.height);
   
-          if (index >= 1 && index <= 4) {
+          // Add text annotations for specific regions
+          if (index >= 1 && index <= 4) { // For 2. Visor, 3. Vest, 4. Armguard, 5. Boots
             ctx.font = 'bold 20px Roboto';
             ctx.fillStyle = 'red';
-            ctx.fillText(`${index + 0}`, layout.x + 10, layout.y + 30);
+            ctx.fillText(`${index + 0}`, layout.x + 10, layout.y + 30); // Adds text to the top left of the cropped area
           }
   
+          // Check if all images are drawn (including those that might not be loaded)
           imagesLoaded++;
           if (imagesLoaded >= drawOrder.length) {
             const combinedImage = canvas.toDataURL();
@@ -323,32 +267,20 @@ function App() {
           }
         };
       } else {
+        // Increment the count for images that are not available
         imagesLoaded++;
+        // Check if all images are drawn (including those that might not be loaded)
         if (imagesLoaded >= drawOrder.length) {
           const combinedImage = canvas.toDataURL();
           setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
         }
       }
     });
-  }, [currentMode, croppedImages]);
-  
-  
-  
-  useEffect(() => {
-    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
-      combineImages();
-    }
-  }, [croppedImages, combineImages]);
+  };
   
     
     
-  useEffect(() => {
-    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
-      combineImages();
-    }
-  }, [croppedImages, combineImages]);
   
-    
   
 
   // Reset all states to initial
@@ -358,6 +290,7 @@ function App() {
     setIsImagesConfirmed(false);
     setIsIndividualUpload(true);
     setCurrentMode('');
+    cropperRefs.current = {};
   };
 
   // Component for individual upload sections with drag-and-drop
@@ -401,131 +334,113 @@ function App() {
       <p>Capture the screenshot of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
     </header>
 
- {/* Mode selection buttons */}
- <div className="mode-switch">
-          <p className="upload-instructions2">3331 for Alice</p>
-          <p className="upload-instructions3">3131 for Emilia, Maid privaty, S.anis(?), etc.</p>
-          <p className="upload-instructions3">3311 for Ein(?), etc.</p>
-          <p className="upload-instructions3">2222 for Crown</p>
-          <p className="upload-instructions3">3333 for Liter</p>
+      {!isImagesConfirmed ? (
+        <>
+          {/* Upload options */}
+          <div className="upload-options">
+            <button onClick={() => setIsIndividualUpload(true)}>Individual Upload</button>
+            <button onClick={() => setIsIndividualUpload(false)} style={{ marginLeft: '10px' }}>
+              All-in-One Upload 
+            </button>
+          </div>
 
-          <button
-  onClick={() => handleModeSelection('attacker1')}
-  className={currentMode === 'attacker1' ? 'active' : ''}
->
-  Attacker 3331
-</button>
-<button
-  onClick={() => handleModeSelection('attacker2')}
-  className={currentMode === 'attacker2' ? 'active' : ''}
->
-  Attacker 3131
-</button>
-<button
-  onClick={() => handleModeSelection('attacker3')}
-  className={currentMode === 'attacker3' ? 'active' : ''}
->
-  Attacker 3311
-</button>
-<button
-  onClick={() => handleModeSelection('defender')}
-  className={currentMode === 'defender' ? 'active' : ''}
->
-  Defender 2222
-</button>
-<button
-  onClick={() => handleModeSelection('supporter')}
-  className={currentMode === 'supporter' ? 'active' : ''}
->
-  Supporter 3333
-</button>
+          {isIndividualUpload ? (
+            <div className="upload-sections">
+              {Object.keys(attacker1CroppingAreas).map((key) => (
+                <UploadSection key={key} keyName={key} />
+              ))}
+            </div>
+          ) : (
+            <div className="all-in-one-upload">
+              <label htmlFor="all-in-one-upload" className="upload-label">
+                All-in-One Upload:
+              </label>
+              <input
+                id="all-in-one-upload"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleAllInOneUpload}
+                className="upload-input"
+              />
+              <p className="upload-instructions">
+                Upload all images at once in the order: Portrait, Skill, Cube, Visor, Vest, Armguard, Boots, Dolls.
+              </p>
+            </div>
+          )}
 
-        </div>
+          {/* Mode selection buttons */}
+          <div className="mode-switch">
+  <p className="upload-instructions2">
+    3331 for Alice
+  </p>
+  <p className="upload-instructions3">
+    3131 for Emilia, Maid privaty, S.anis(?)
+  </p>
+  <p className="upload-instructions3">
+    3311 for Ein(?)
+  </p>
+  <p className="upload-instructions3">
+    2222 for Crown
+  </p>
+  <p className="upload-instructions3">
+    3333 for Liter
+  </p>
 
-    {!isImagesConfirmed ? (
-      <>
-        {/* Upload options */}
-        <div className="upload-options">
-          <button onClick={() => setIsIndividualUpload(true)} disabled={!currentMode}>Individual Upload</button>
-          <button onClick={() => setIsIndividualUpload(false)} style={{ marginLeft: '10px' }} disabled={!currentMode}>
-            All-in-One Upload
-          </button>
-        </div>
-
-        {!currentMode ? (
-  <div className="mode-selection-warning">
-    <p>Please select a mode before uploading images.</p>
-  </div>
-  
-) : (
-  <>
-    
-
-    {isIndividualUpload ? (
-      <div className="upload-sections">
-        {Object.keys(attacker1CroppingAreas).map((key) => (
-          <UploadSection key={key} keyName={key} />
-        ))}
-      </div>
-    ) : (
-      <div className="all-in-one-upload">
-        <label htmlFor="all-in-one-upload" className="upload-label">
-          All-in-One Upload:
-        </label>
-        <input
-          id="all-in-one-upload"
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleAllInOneUpload}
-          className="upload-input"
-        />
-        <p className="upload-instructions">
-          Upload all images at once in the order: Portrait, Skill, Cube, Visor, Vest, Armguard, Boots, Dolls.
-        </p>
-      </div>
-    )}
-
-    {Object.keys(selectedImages).length > 0 && (
-      <button onClick={confirmUpload} className="confirm-button">
-        Confirm Upload
-      </button>
-    )}
-  </>
-)}
-
-      </>
-    ) : (
-      <>
-        
-
-{Object.keys(selectedImages).map((key) => (
-  <div key={key} style={{ display: 'none' }}>
-    <Cropper
-      src={selectedImages[key]}
-      style={{ height: 1080, width: 1920 }}
-      aspectRatio={NaN}
-      guides={false}
-      ref={(el) => (cropperRefs.current[key] = el)}
-      ready={() => cropImage(key)}
-    />
-  </div>
-))}
-
-<div className="cropped-images-preview">
-  {croppedImages.combined ? (
-    <div>
-      <h3>Final Combined Image</h3>
-      <img src={croppedImages.combined} alt="Combined Preview" />
-      
-    </div>
-  ) : (
-    <p>Processing...</p>
-  )}
+  <button onClick={() => setCurrentMode('attacker1')} className={currentMode === 'attacker1' ? 'active' : ''}>
+    Attacker 3331
+  </button>
+  <button onClick={() => setCurrentMode('attacker2')} className={currentMode === 'attacker3' ? 'active' : ''}>
+    Attacker 3131
+  </button>
+  <button onClick={() => setCurrentMode('attacker3')} className={currentMode === 'attacker2' ? 'active' : ''}>
+    Attacker 3311
+  </button>
+  <button onClick={() => setCurrentMode('defender')} className={currentMode === 'defender' ? 'active' : ''}>
+    Defender 2222
+  </button>
+  <button onClick={() => setCurrentMode('supporter')} className={currentMode === 'supporter' ? 'active' : ''}>
+    Supporter 3333
+  </button>
 </div>
 
-<button onClick={resetAll} className="reset-button">Start Over</button>
+          {Object.keys(selectedImages).length > 0 && (
+            <button onClick={confirmUpload} className="confirm-button">
+              Confirm Upload
+            </button>
+          )}
+        </>
+      ) : (
+        <>
+          {Object.keys(selectedImages).map((key) => (
+            <div key={key} style={{ display: 'none' }}>
+              <Cropper
+                src={selectedImages[key]}
+                style={{ height: 1080, width: 1920 }}
+                aspectRatio={NaN}
+                guides={false}
+                ref={(el) => (cropperRefs.current[key] = el)}
+                ready={() => cropImage(key)}
+              />
+            </div>
+          ))}
 
+          <div className="cropped-images-preview">
+            {croppedImages.combined ? (
+              <div className="cropped-image">
+                <h3>Combined Image ({currentMode.charAt(0).toUpperCase() + currentMode.slice(1)})</h3>
+                <img src={croppedImages.combined} alt="Combined" />
+              </div>
+            ) : (
+              <button onClick={combineImages} className="combine-button">
+                Combine Images
+              </button>
+            )}
+          </div>
+
+          <button onClick={resetAll} style={{ marginTop: '20px' }}>
+            Reset
+          </button>
         </>
       )}
     </div>
