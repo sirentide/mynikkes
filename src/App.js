@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './App.css';
@@ -190,17 +190,8 @@ function App() {
   
   
 
-  // Confirmation to proceed with cropping
-  const confirmUpload = () => {
-    if (!currentMode) {
-      alert('Please select a mode before uploading images.');
-      return;
-    }
   
-    setIsImagesConfirmed(true);
-    // Trigger cropping for all images again
-    Object.keys(selectedImages).forEach((key) => cropImage(key));
-  };
+  
   
   
 
@@ -242,22 +233,19 @@ function App() {
     }, [currentMode]);
   
   
-  // Reset cropping on mode change
-  useEffect(() => {
-    if (currentMode && Object.keys(selectedImages).length > 0) {
-      // Reset cropped images
-      setCroppedImages({});
-      // Re-trigger cropping
-      Object.keys(selectedImages).forEach((key) => cropImage(key));
+  
+  // Confirmation to proceed with cropping
+  const confirmUpload = useCallback(() => {
+    if (!currentMode) {
+      alert('Please select a mode before uploading images.');
+      return;
     }
-  }, [currentMode, selectedImages, cropImage]);
+  
+    setIsImagesConfirmed(true);
+    // Trigger cropping for all images again
+    Object.keys(selectedImages).forEach((key) => cropImage(key));
+  }, [currentMode, selectedImages, cropImage]); // Added cropImage here
 
-   
-  
-  
-  
-
-  
   
 
   
@@ -333,6 +321,20 @@ function App() {
   }, [currentMode, croppedImages]);
   
   
+  // Reset cropping on mode change
+  useEffect(() => {
+    if (currentMode && Object.keys(selectedImages).length > 0) {
+      confirmUpload();
+    }
+  }, [currentMode, confirmUpload, selectedImages]);
+
+  useEffect(() => {
+    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
+      combineImages();
+    }
+  }, [croppedImages, combineImages]);
+   
+
   
   useEffect(() => {
     if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
@@ -349,7 +351,12 @@ function App() {
   }, [croppedImages, combineImages]);
   
     
-  
+  useLayoutEffect(() => {
+    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
+      combineImages();
+    }
+  }, [croppedImages, combineImages]);
+
 
   // Reset all states to initial
   const resetAll = () => {
@@ -401,13 +408,19 @@ function App() {
       <p>Capture the screenshot of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
     </header>
 
+    <div className="cropped-images-preview">
+  {croppedImages.combined ? (
+    <div>
+      <img src={croppedImages.combined} alt="Combined Preview" />
+      
+    </div>
+  ) : (
+    <p>Please select a mode before uploading images.</p>
+  )}
+</div>
+
  {/* Mode selection buttons */}
  <div className="mode-switch">
-          <p className="upload-instructions2">3331 for Alice</p>
-          <p className="upload-instructions3">3131 for Emilia, Maid privaty, S.anis(?), etc.</p>
-          <p className="upload-instructions3">3311 for Ein(?), etc.</p>
-          <p className="upload-instructions3">2222 for Crown</p>
-          <p className="upload-instructions3">3333 for Liter</p>
 
           <button
   onClick={() => handleModeSelection('attacker1')}
@@ -440,11 +453,17 @@ function App() {
   Supporter 3333
 </button>
 
+          <p className="upload-instructions2">3331 for Alice</p>
+          <p className="upload-instructions3">3131 for Emilia, Maid privaty, S.anis(?), etc.</p>
+          <p className="upload-instructions3">3311 for Ein(?), etc.</p>
+          <p className="upload-instructions3">2222 for Crown</p>
+          <p className="upload-instructions3">3333 for Liter</p>
         </div>
 
     {!isImagesConfirmed ? (
       <>
         {/* Upload options */}
+        
         <div className="upload-options">
           <button onClick={() => setIsIndividualUpload(true)} disabled={!currentMode}>Individual Upload</button>
           <button onClick={() => setIsIndividualUpload(false)} style={{ marginLeft: '10px' }} disabled={!currentMode}>
@@ -454,7 +473,7 @@ function App() {
 
         {!currentMode ? (
   <div className="mode-selection-warning">
-    <p>Please select a mode before uploading images.</p>
+    
   </div>
   
 ) : (
@@ -512,17 +531,7 @@ function App() {
   </div>
 ))}
 
-<div className="cropped-images-preview">
-  {croppedImages.combined ? (
-    <div>
-      <h3>Final Combined Image</h3>
-      <img src={croppedImages.combined} alt="Combined Preview" />
-      
-    </div>
-  ) : (
-    <p>Processing...</p>
-  )}
-</div>
+
 
 <button onClick={resetAll} className="reset-button">Start Over</button>
 
