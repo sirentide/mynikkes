@@ -3,6 +3,8 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './App.css';
 import { useDropzone } from 'react-dropzone';
+import { throttle } from 'lodash';
+
 
 const attacker1CroppingAreas = {
   '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
@@ -32,6 +34,17 @@ const attacker3CroppingAreas = {
   '3. Vest': { left: 735, top: 735, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
   '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
+  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
+  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
+  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
+};
+
+const attacker4CroppingAreas = {
+  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '2. Visor': { left: 735, top: 695, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 695, width: 450, height: 120 },
+  '4. Armguard': { left: 735, top: 695, width: 450, height: 120 },
+  '5. Boots': { left: 735, top: 695, width: 450, height: 120 },
   '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
   '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
   '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
@@ -93,6 +106,17 @@ const attacker3TemplateLayout = {
   '8. Dolls': { x: 600, y: 265 },
 };
 
+const attacker4TemplateLayout = {
+  '1. Portrait': { x: 0, y: 0 },
+  '2. Visor': { x: 0, y: 300 },
+  '3. Vest': { x: 450, y: 300 },
+  '4. Armguard': { x: 0, y: 420 },
+  '5. Boots': { x: 450, y: 420 },
+  '6. Skill': { x: 670, y: 0 },
+  '7. Cube': { x: 800, y: 210 },
+  '8. Dolls': { x: 600, y: 265 },
+};
+
 const defenderTemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
@@ -127,6 +151,7 @@ function App() {
   const [isIndividualUpload, setIsIndividualUpload] = useState(true);
   const [currentMode, setCurrentMode] = useState('');
   const cropperRefs = useRef({});
+  
 
 
   const handleModeSelection = (mode) => {
@@ -173,6 +198,12 @@ function App() {
   
     const files = event.target.files;
     const images = {};
+
+  
+  if (files.length > 8) {
+    alert('You can only upload up to 8 images.');
+    return;
+  }
   
     Object.keys(attacker1CroppingAreas).forEach((key, index) => {
       if (files[index]) {
@@ -197,40 +228,42 @@ function App() {
 
   const cropImage = useCallback((key) => {
     const cropper = cropperRefs.current[key]?.cropper;
-    
+  
     if (!cropper) {
       console.error(`Cropper instance for ${key} is not available`);
       return;
     }
-    
+  
     const cropArea = (currentMode === 'attacker1' ? attacker1CroppingAreas : 
       currentMode === 'attacker2' ? attacker2CroppingAreas :
       currentMode === 'attacker3' ? attacker3CroppingAreas :
+      currentMode === 'attacker4' ? attacker4CroppingAreas :
       currentMode === 'defender' ? defenderCroppingAreas :
       supporterCroppingAreas)[key];
-    
-      if (cropArea) {
-        cropper.setData({
-          x: cropArea.left,
-          y: cropArea.top,
-          width: cropArea.width,
-          height: cropArea.height,
-        });
-      
-        const croppedCanvas = cropper.getCroppedCanvas();
-        if (croppedCanvas) {
-          const cropped = croppedCanvas.toDataURL();
-          setCroppedImages((prev) => ({
-            ...prev,
-            [key]: cropped,
-          }));
-        } else {
-          console.error(`Failed to get cropped canvas for ${key}`);
-        }
+  
+    if (cropArea) {
+      cropper.setData({
+        x: cropArea.left,
+        y: cropArea.top,
+        width: cropArea.width,
+        height: cropArea.height,
+      });
+  
+      const croppedCanvas = cropper.getCroppedCanvas();
+      if (croppedCanvas) {
+        const cropped = croppedCanvas.toDataURL();
+        setCroppedImages((prev) => ({
+          ...prev,
+          [key]: cropped,
+        }));
       } else {
-        console.error(`No crop area defined for ${key}`);
+        console.error(`Failed to get cropped canvas for ${key}`);
       }
-    }, [currentMode]);
+    } else {
+      console.error(`No crop area defined for ${key}`);
+    }
+  }, [currentMode]);
+  
   
   
   
@@ -249,113 +282,115 @@ function App() {
   
 
   
-    const combineImages = useCallback(() => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = FIXED_CANVAS_WIDTH;
-      canvas.height = FIXED_CANVAS_HEIGHT;
-  
+  const combineImages = throttle(async () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = FIXED_CANVAS_WIDTH;
+    canvas.height = FIXED_CANVAS_HEIGHT;
+
     const drawOrder = [
-      '1. Portrait',
-      '2. Visor',
-      '3. Vest',
-      '4. Armguard',
-      '5. Boots',
-      '6. Skill',
-      '7. Cube',
-      '8. Dolls',
+        '1. Portrait',
+        '2. Visor',
+        '3. Vest',
+        '4. Armguard',
+        '5. Boots',
+        '6. Skill',
+        '7. Cube',
+        '8. Dolls',
     ];
-  
+
     const templateLayout = currentMode === 'attacker1'
-      ? attacker1TemplateLayout
-      : currentMode === 'attacker2'
-      ? attacker2TemplateLayout
-      : currentMode === 'attacker3'
-      ? attacker3TemplateLayout
-      : currentMode === 'defender'
-      ? defenderTemplateLayout
-      : supporterTemplateLayout;
-  
+        ? attacker1TemplateLayout
+        : currentMode === 'attacker2'
+        ? attacker2TemplateLayout
+        : currentMode === 'attacker3'
+        ? attacker3TemplateLayout
+        : currentMode === 'attacker4'
+        ? attacker4TemplateLayout
+        : currentMode === 'defender'
+        ? defenderTemplateLayout
+        : supporterTemplateLayout;
+
     const croppingAreas = currentMode === 'attacker1'
-      ? attacker1CroppingAreas
-      : currentMode === 'attacker2'
-      ? attacker2CroppingAreas
-      : currentMode === 'attacker3'
-      ? attacker3CroppingAreas
-      : currentMode === 'defender'
-      ? defenderCroppingAreas
-      : supporterCroppingAreas;
-  
-    let imagesLoaded = 0;
-  
+        ? attacker1CroppingAreas
+        : currentMode === 'attacker2'
+        ? attacker2CroppingAreas
+        : currentMode === 'attacker3'
+        ? attacker3CroppingAreas 
+        : currentMode === 'attacker4'
+        ? attacker4CroppingAreas
+        : currentMode === 'defender'
+        ? defenderCroppingAreas
+        : supporterCroppingAreas;
+
+    let imagesProcessed = 0;
+
     drawOrder.forEach((key, index) => {
-      if (croppedImages[key]) {
-        const img = new Image();
-        img.src = croppedImages[key];
-        img.onload = () => {
-          const layout = templateLayout[key];
-          const cropArea = croppingAreas[key];
-  
-          ctx.drawImage(img, layout.x, layout.y, cropArea.width, cropArea.height);
-  
-          if (index >= 1 && index <= 4) {
-            ctx.font = 'bold 20px Roboto';
-            ctx.fillStyle = 'red';
-            ctx.fillText(`${index + 0}`, layout.x + 10, layout.y + 30);
-          }
-  
-          imagesLoaded++;
-          if (imagesLoaded >= drawOrder.length) {
-            const combinedImage = canvas.toDataURL();
-            setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
-          }
-        };
-      } else {
-        imagesLoaded++;
-        if (imagesLoaded >= drawOrder.length) {
-          const combinedImage = canvas.toDataURL();
-          setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
+        if (croppedImages[key]) {
+            const img = new Image();
+            img.src = croppedImages[key];
+            img.onload = () => {
+                const layout = templateLayout[key];
+                const cropArea = croppingAreas[key];
+
+                // Draw the image on the canvas
+                ctx.drawImage(img, layout.x, layout.y, cropArea.width, cropArea.height);
+
+                // Add text annotations for specific regions
+                if (index >= 1 && index <= 4) { // For 2. Visor, 3. Vest, 4. Armguard, 5. Boots
+                    ctx.font = 'bold 20px Roboto';
+                    ctx.fillStyle = 'red';
+                    ctx.fillText(`${index + 1}`, layout.x + 10, layout.y + 30); // Adds text to the top left of the cropped area
+                }
+
+                // Increment the count of processed images
+                imagesProcessed++;
+                if (imagesProcessed >= drawOrder.length) {
+                    const combinedImage = canvas.toDataURL();
+                    setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
+                }
+            };
+        } else {
+            // If image is missing, consider drawing a placeholder or skip
+            const layout = templateLayout[key];
+            ctx.fillStyle = 'white'; // Placeholder color
+            ctx.fillRect(layout.x, layout.y, croppingAreas[key].width, croppingAreas[key].height);
+
+            // Increment the count of processed images
+            imagesProcessed++;
+            if (imagesProcessed >= drawOrder.length) {
+                const combinedImage = canvas.toDataURL();
+                setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
+            }
         }
-      }
     });
-  }, [currentMode, croppedImages]);
+  }, 300);
+
+  
+  
+  
+  
+  
+  
   
   
   // Reset cropping on mode change
   useEffect(() => {
-    if (currentMode && Object.keys(selectedImages).length > 0) {
+    if (currentMode && Object.keys(selectedImages).length > 7) {
       confirmUpload();
     }
   }, [currentMode, confirmUpload, selectedImages]);
-
-  useEffect(() => {
-    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
-      combineImages();
-    }
-  }, [croppedImages, combineImages]);
-   
-
-  
-  useEffect(() => {
-    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
-      combineImages();
-    }
-  }, [croppedImages, combineImages]);
-  
-    
-    
-  useEffect(() => {
-    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
-      combineImages();
-    }
-  }, [croppedImages, combineImages]);
   
     
   useLayoutEffect(() => {
-    if (Object.keys(croppedImages).length === Object.keys(attacker1CroppingAreas).length) {
-      combineImages();
+    // Check if at least one image is available
+    if (Object.keys(croppedImages).length > 0) {
+        combineImages();
     }
-  }, [croppedImages, combineImages]);
+}, [croppedImages, combineImages]);
+
+
 
 
   // Reset all states to initial
@@ -404,7 +439,7 @@ function App() {
   return (
     <div className="App">
     <header className="App-header">
-      <h1>MY NIKKE v.1.02</h1>
+      <h1>MY NIKKE v.1.03</h1>
       <p>Capture the screenshots of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
     </header>
 
@@ -420,45 +455,70 @@ function App() {
 </div>
 
  {/* Mode selection buttons */}
- <div className="mode-switch">
+ <div className="mode-switch-wrapper">
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('attacker1')}
+      className={currentMode === 'attacker1' ? 'active' : ''}
+    >
+      A 3331
+    </button>
+    <p className="upload-instructions3">Alice</p>
+  </div>
 
-          <button
-  onClick={() => handleModeSelection('attacker1')}
-  className={currentMode === 'attacker1' ? 'active' : ''}
->
-  A 3331
-</button>
-<button
-  onClick={() => handleModeSelection('attacker2')}
-  className={currentMode === 'attacker2' ? 'active' : ''}
->
-  A 3131
-</button>
-<button
-  onClick={() => handleModeSelection('attacker3')}
-  className={currentMode === 'attacker3' ? 'active' : ''}
->
-  A 3311
-</button>
-<button
-  onClick={() => handleModeSelection('defender')}
-  className={currentMode === 'defender' ? 'active' : ''}
->
-  D 2222
-</button>
-<button
-  onClick={() => handleModeSelection('supporter')}
-  className={currentMode === 'supporter' ? 'active' : ''}
->
-  S 1111
-</button>
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('attacker2')}
+      className={currentMode === 'attacker2' ? 'active' : ''}
+    >
+      A 3131
+    </button>
+    <p className="upload-instructions3">Emilia, Maid privaty, S.anis</p>
+  </div>
 
-          <p className="upload-instructions2">3331 for Alice</p>
-          <p className="upload-instructions3">3131 for Emilia, Maid privaty, S.anis(?), etc.</p>
-          <p className="upload-instructions3">3311 for Ein(?), etc.</p>
-          <p className="upload-instructions3">2222 for Crown</p>
-          <p className="upload-instructions3">1111 for Liter Asuka</p>
-        </div>
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('attacker3')}
+      className={currentMode === 'attacker3' ? 'active' : ''}
+    >
+      A 3311
+    </button>
+    <p className="upload-instructions3">Ein, Maxwell</p>
+  </div>
+
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('defender')}
+      className={currentMode === 'defender' ? 'active' : ''}
+    >
+      D 2222
+    </button>
+    <p className="upload-instructions3">Crown</p>
+  </div>
+
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('supporter')}
+      className={currentMode === 'supporter' ? 'active' : ''}
+    >
+      S 1111
+    </button>
+    <p className="upload-instructions3">Liter Asuka</p>
+  </div>
+
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('attacker4')}
+      className={currentMode === 'attacker4' ? 'active' : ''}
+    >
+      A 0000
+    </button>
+    <p className="upload-instructions3">Thai UI Asuka</p>
+  </div>
+</div>
+
+
+
 
     {!isImagesConfirmed ? (
       <>
@@ -518,7 +578,7 @@ function App() {
       <>
         
 
-{Object.keys(selectedImages).map((key) => (
+        {Object.keys(selectedImages).map((key) => (
   <div key={key} style={{ display: 'none' }}>
     <Cropper
       src={selectedImages[key]}
@@ -526,10 +586,13 @@ function App() {
       aspectRatio={NaN}
       guides={false}
       ref={(el) => (cropperRefs.current[key] = el)}
-      ready={() => cropImage(key)}
+      ready={() => {
+        cropImage(key);
+      }}
     />
   </div>
 ))}
+
 
 
 

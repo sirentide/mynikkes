@@ -101,17 +101,6 @@ h1 {
   text-align: center;
 }
 
-.upload-instructions {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 2px;
-}
-
-.upload-instructions2 {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 2px;
-}
 
 .upload-instructions3 {
   font-size: 0.8rem;
@@ -167,35 +156,6 @@ button.reset-button:hover {
   background-color: #c82333;
 }
 
-.mode-switch button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  background-color: #f0f0f0;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.mode-switch button:hover {
-  background-color: #e6e6e6;
-  border-color: #999;
-}
-
-.mode-switch button.active {
-  background-color: #4caf50; /* Change this to your preferred active color */
-  color: white;
-  border-color: #4caf50;
-}
-
-.mode-switch button:disabled {
-  background-color: #ddd;
-  color: #999;
-  cursor: not-allowed;
-}
 
 /* Additional styles for a cleaner layout */
 .mode-switch {
@@ -207,3 +167,78 @@ button.reset-button:hover {
   text-align: center;
   margin-top: 20px;
 }
+
+
+/* Basic styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.App {
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+/* Updated styles for mode-switch button and text alignment */
+.mode-switch-wrapper {
+  display: flex; /* Align items in a row */
+  flex-wrap: wrap; /* Allow wrapping if there's not enough space */
+  gap: 20px; /* Space between items */
+  justify-content: center; /* Center items horizontally */
+}
+
+.mode-switch-item {
+  display: flex; /* Align button and text vertically */
+  flex-direction: column; /* Stack button and text vertically */
+  align-items: center; /* Center-align button and text */
+  width: 150px; /* Fixed width for consistency */
+}
+
+.mode-switch-item button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%; /* Ensure button takes the full width of its container */
+}
+
+.mode-switch-item button:hover {
+  background-color: #e6e6e6;
+  border-color: #999;
+}
+
+.mode-switch-item button.active {
+  background-color: #4caf50; /* Change this to your preferred active color */
+  color: white;
+  border-color: #4caf50;
+}
+
+.mode-switch-item button:disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.upload-instructions3 {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 2px;
+  text-align: center; /* Center-align text */
+  white-space: normal; /* Allow text to wrap */
+  word-wrap: break-word; /* Break long words onto a new line */
+  overflow-wrap: break-word; /* Break long words onto a new line */
+}
+
