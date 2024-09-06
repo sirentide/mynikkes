@@ -450,14 +450,14 @@ function App() {
   onClick={() => handleModeSelection('supporter')}
   className={currentMode === 'supporter' ? 'active' : ''}
 >
-  S 3333
+  S 1111
 </button>
 
           <p className="upload-instructions2">3331 for Alice</p>
           <p className="upload-instructions3">3131 for Emilia, Maid privaty, S.anis(?), etc.</p>
           <p className="upload-instructions3">3311 for Ein(?), etc.</p>
           <p className="upload-instructions3">2222 for Crown</p>
-          <p className="upload-instructions3">3333 for Liter Asuka</p>
+          <p className="upload-instructions3">1111 for Liter Asuka</p>
         </div>
 
     {!isImagesConfirmed ? (
