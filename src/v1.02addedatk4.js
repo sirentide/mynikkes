@@ -37,6 +37,17 @@ const attacker3CroppingAreas = {
   '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
 };
 
+const attacker4CroppingAreas = {
+  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '2. Visor': { left: 735, top: 710, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
+  '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
+  '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
+  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
+  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
+  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
+};
+
 const defenderCroppingAreas = {
   '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
   '2. Visor': { left: 735, top: 720, width: 450, height: 120 },
@@ -64,8 +75,8 @@ const attacker1TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
   '6. Skill': { x: 670, y: 0 },
   '7. Cube': { x: 800, y: 210 },
   '8. Dolls': { x: 600, y: 265 },
@@ -75,8 +86,8 @@ const attacker2TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
   '6. Skill': { x: 670, y: 0 },
   '7. Cube': { x: 800, y: 210 },
   '8. Dolls': { x: 600, y: 265 },
@@ -86,19 +97,31 @@ const attacker3TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
   '6. Skill': { x: 670, y: 0 },
   '7. Cube': { x: 800, y: 210 },
   '8. Dolls': { x: 600, y: 265 },
 };
 
+const attacker4TemplateLayout = {
+  '1. Portrait': { x: 0, y: 0 },
+  '2. Visor': { x: 0, y: 300 },
+  '3. Vest': { x: 450, y: 300 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
+  '6. Skill': { x: 670, y: 0 },
+  '7. Cube': { x: 800, y: 210 },
+  '8. Dolls': { x: 600, y: 265 },
+};
+
+
 const defenderTemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
   '6. Skill': { x: 670, y: 0 },
   '7. Cube': { x: 800, y: 210 },
   '8. Dolls': { x: 600, y: 265 },
@@ -108,8 +131,8 @@ const supporterTemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
+  '4. Armguard': { x: 450, y: 420 },
+  '5. Boots': { x: 0, y: 420 },
   '6. Skill': { x: 670, y: 0 },
   '7. Cube': { x: 800, y: 210 },
   '8. Dolls': { x: 600, y: 265 },
@@ -206,6 +229,7 @@ function App() {
     const cropArea = (currentMode === 'attacker1' ? attacker1CroppingAreas : 
       currentMode === 'attacker2' ? attacker2CroppingAreas :
       currentMode === 'attacker3' ? attacker3CroppingAreas :
+      currentMode === 'attacker4' ? attacker4CroppingAreas :
       currentMode === 'defender' ? defenderCroppingAreas :
       supporterCroppingAreas)[key];
     
@@ -272,6 +296,8 @@ function App() {
       ? attacker2TemplateLayout
       : currentMode === 'attacker3'
       ? attacker3TemplateLayout
+      : currentMode === 'attacker3'
+      ? attacker4TemplateLayout
       : currentMode === 'defender'
       ? defenderTemplateLayout
       : supporterTemplateLayout;
@@ -282,6 +308,8 @@ function App() {
       ? attacker2CroppingAreas
       : currentMode === 'attacker3'
       ? attacker3CroppingAreas
+      : currentMode === 'attacker4'
+      ? attacker4CroppingAreas
       : currentMode === 'defender'
       ? defenderCroppingAreas
       : supporterCroppingAreas;
@@ -405,7 +433,7 @@ function App() {
     <div className="App">
     <header className="App-header">
       <h1>MY NIKKE v.1.02</h1>
-      <p>Capture the screenshots of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
+      <p>Capture the screenshot of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
     </header>
 
     <div className="cropped-images-preview">
@@ -415,7 +443,7 @@ function App() {
       
     </div>
   ) : (
-    <p>Please select a crop method before uploading images.</p>
+    <p>Please select a mode before uploading images.</p>
   )}
 </div>
 
@@ -426,38 +454,45 @@ function App() {
   onClick={() => handleModeSelection('attacker1')}
   className={currentMode === 'attacker1' ? 'active' : ''}
 >
-  A 3331
+  Attacker 3331
 </button>
 <button
   onClick={() => handleModeSelection('attacker2')}
   className={currentMode === 'attacker2' ? 'active' : ''}
 >
-  A 3131
+  Attacker 3131
 </button>
 <button
   onClick={() => handleModeSelection('attacker3')}
   className={currentMode === 'attacker3' ? 'active' : ''}
 >
-  A 3311
+  Attacker 3333
+</button>
+<button
+  onClick={() => handleModeSelection('attacker4')}
+  className={currentMode === 'attacker4' ? 'active' : ''}
+>
+  Attacker 1113
 </button>
 <button
   onClick={() => handleModeSelection('defender')}
   className={currentMode === 'defender' ? 'active' : ''}
 >
-  D 2222
+  Defender 2222
 </button>
 <button
   onClick={() => handleModeSelection('supporter')}
   className={currentMode === 'supporter' ? 'active' : ''}
 >
-  S 3333
+  Supporter 3333
 </button>
 
           <p className="upload-instructions2">3331 for Alice</p>
           <p className="upload-instructions3">3131 for Emilia, Maid privaty, S.anis(?), etc.</p>
           <p className="upload-instructions3">3311 for Ein(?), etc.</p>
+          <p className="upload-instructions3">3333 for Asuka</p>
           <p className="upload-instructions3">2222 for Crown</p>
-          <p className="upload-instructions3">3333 for Liter Asuka</p>
+          <p className="upload-instructions3">3333 for Liter</p>
         </div>
 
     {!isImagesConfirmed ? (
