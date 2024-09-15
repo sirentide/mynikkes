@@ -560,7 +560,7 @@ function App() {
           className="upload-input"
         />
         <p className="upload-instructions">
-          Upload all images at once in the order: Portrait, Skill, Cube, Visor, Vest, Armguard, Boots, Dolls.
+          Upload all images at once in the order: Portrait, Visor, Vest, Armguard, Boots, Skill, Cube, Dolls.
         </p>
       </div>
     )}
