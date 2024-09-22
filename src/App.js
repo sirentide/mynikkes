@@ -483,7 +483,7 @@ function App() {
     >
       A 3311
     </button>
-    <p className="upload-instructions3">Ein, Maxwell</p>
+    <p className="upload-instructions3">Ein, Maxwell, Snowwhite</p>
   </div>
 
   <div className="mode-switch-item">
@@ -503,7 +503,7 @@ function App() {
     >
       S 1111
     </button>
-    <p className="upload-instructions3">Liter Asuka</p>
+    <p className="upload-instructions3">Liter, Asuka, S.Sukura</p>
   </div>
 
   <div className="mode-switch-item">
