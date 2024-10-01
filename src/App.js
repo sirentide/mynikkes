@@ -151,7 +151,8 @@ function App() {
   const [isIndividualUpload, setIsIndividualUpload] = useState(true);
   const [currentMode, setCurrentMode] = useState('');
   const cropperRefs = useRef({});
-  
+  const combinedImageCache = {};
+
 
 
   const handleModeSelection = (mode) => {
@@ -283,6 +284,15 @@ function App() {
 
   
   const combineImages = throttle(async () => {
+    // Create a unique key based on the selected images and the current mode
+    const cacheKey = `${currentMode}-${Object.keys(selectedImages).sort().join('-')}`;
+
+    // Check if the combined image is already cached
+    if (combinedImageCache[cacheKey]) {
+        setCroppedImages((prev) => ({ ...prev, combined: combinedImageCache[cacheKey] }));
+        return;
+    }
+
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
@@ -317,7 +327,7 @@ function App() {
         : currentMode === 'attacker2'
         ? attacker2CroppingAreas
         : currentMode === 'attacker3'
-        ? attacker3CroppingAreas 
+        ? attacker3CroppingAreas
         : currentMode === 'attacker4'
         ? attacker4CroppingAreas
         : currentMode === 'defender'
@@ -348,6 +358,11 @@ function App() {
                 imagesProcessed++;
                 if (imagesProcessed >= drawOrder.length) {
                     const combinedImage = canvas.toDataURL();
+
+                    // Cache the combined image
+                    combinedImageCache[cacheKey] = combinedImage;
+
+                    // Set the combined image
                     setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
                 }
             };
@@ -361,11 +376,17 @@ function App() {
             imagesProcessed++;
             if (imagesProcessed >= drawOrder.length) {
                 const combinedImage = canvas.toDataURL();
+
+                // Cache the combined image
+                combinedImageCache[cacheKey] = combinedImage;
+
+                // Set the combined image
                 setCroppedImages((prev) => ({ ...prev, combined: combinedImage }));
             }
         }
     });
-  }, 300);
+}, 300);
+
 
   
   
@@ -473,7 +494,7 @@ function App() {
     >
       A 3131
     </button>
-    <p className="upload-instructions3">Emilia, Maid privaty, S.anis</p>
+    <p className="upload-instructions3">Emilia, Maid privaty, S.anis, Ein</p>
   </div>
 
   <div className="mode-switch-item">
@@ -483,7 +504,7 @@ function App() {
     >
       A 3311
     </button>
-    <p className="upload-instructions3">Ein, Maxwell, Snowwhite</p>
+    <p className="upload-instructions3">Maxwell, Snowwhite</p>
   </div>
 
   <div className="mode-switch-item">
