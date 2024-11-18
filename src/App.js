@@ -52,8 +52,19 @@ const attacker4CroppingAreas = {
 
 const defenderCroppingAreas = {
   '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
-  '2. Visor': { left: 735, top: 720, width: 450, height: 120 },
+  '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 720, width: 450, height: 120 },
+  '4. Armguard': { left: 735, top: 745, width: 450, height: 120 },
+  '5. Boots': { left: 735, top: 720, width: 450, height: 120 },
+  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
+  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
+  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
+};
+
+const defender1CroppingAreas = {
+  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 745, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 720, width: 450, height: 120 },
   '5. Boots': { left: 735, top: 720, width: 450, height: 120 },
   '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
@@ -118,6 +129,17 @@ const attacker4TemplateLayout = {
 };
 
 const defenderTemplateLayout = {
+  '1. Portrait': { x: 0, y: 0 },
+  '2. Visor': { x: 0, y: 300 },
+  '3. Vest': { x: 450, y: 300 },
+  '4. Armguard': { x: 0, y: 420 },
+  '5. Boots': { x: 450, y: 420 },
+  '6. Skill': { x: 670, y: 0 },
+  '7. Cube': { x: 800, y: 210 },
+  '8. Dolls': { x: 600, y: 265 },
+};
+
+const defender1TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 300 },
   '3. Vest': { x: 450, y: 300 },
@@ -240,6 +262,7 @@ function App() {
       currentMode === 'attacker3' ? attacker3CroppingAreas :
       currentMode === 'attacker4' ? attacker4CroppingAreas :
       currentMode === 'defender' ? defenderCroppingAreas :
+      currentMode === 'defender1' ? defender1CroppingAreas :
       supporterCroppingAreas)[key];
   
     if (cropArea) {
@@ -320,6 +343,8 @@ function App() {
         ? attacker4TemplateLayout
         : currentMode === 'defender'
         ? defenderTemplateLayout
+        : currentMode === 'defender1'
+        ? defender1TemplateLayout
         : supporterTemplateLayout;
 
     const croppingAreas = currentMode === 'attacker1'
@@ -332,6 +357,8 @@ function App() {
         ? attacker4CroppingAreas
         : currentMode === 'defender'
         ? defenderCroppingAreas
+        : currentMode === 'defender1'
+        ? defender1CroppingAreas
         : supporterCroppingAreas;
 
     let imagesProcessed = 0;
@@ -460,7 +487,7 @@ function App() {
   return (
     <div className="App">
     <header className="App-header">
-      <h1>MY NIKKE v.1.03</h1>
+      <h1>MY NIKKE v.1.04</h1>
       <p>Capture the screenshots of your Nikke profile in 1920x1080 resolution (only supported resolution at the moment)</p>
     </header>
 
@@ -515,6 +542,16 @@ function App() {
       D 2222
     </button>
     <p className="upload-instructions3">Crown</p>
+  </div>
+
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('defender1')}
+      className={currentMode === 'defender1' ? 'active' : ''}
+    >
+      D 1122
+    </button>
+    <p className="upload-instructions3">Cinderella</p>
   </div>
 
   <div className="mode-switch-item">
