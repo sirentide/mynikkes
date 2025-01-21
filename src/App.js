@@ -7,7 +7,7 @@ import { throttle } from 'lodash';
 
 
 const attacker1CroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 735, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 735, width: 450, height: 120 },
@@ -18,7 +18,7 @@ const attacker1CroppingAreas = {
 };
 
 const attacker2CroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 735, width: 450, height: 120 },
@@ -29,7 +29,7 @@ const attacker2CroppingAreas = {
 };
 
 const attacker3CroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
@@ -40,7 +40,7 @@ const attacker3CroppingAreas = {
 };
 
 const attacker4CroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
   '2. Visor': { left: 735, top: 695, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 695, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 695, width: 450, height: 120 },
@@ -51,7 +51,7 @@ const attacker4CroppingAreas = {
 };
 
 const defenderCroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
   '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 720, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 745, width: 450, height: 120 },
@@ -62,7 +62,7 @@ const defenderCroppingAreas = {
 };
 
 const defender1CroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
   '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 745, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 720, width: 450, height: 120 },
@@ -73,7 +73,7 @@ const defender1CroppingAreas = {
 };
 
 const defender2CroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
   '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 745, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 745, width: 450, height: 120 },
@@ -84,7 +84,7 @@ const defender2CroppingAreas = {
 };
 
 const supporterCroppingAreas = {
-  '1. Portrait': { left: 650, top: 110, width: 900, height: 300 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
   '2. Visor': { left: 735, top: 710, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
@@ -97,96 +97,96 @@ const supporterCroppingAreas = {
 
 const attacker1TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 const attacker2TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 const attacker3TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 const attacker4TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 const defenderTemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 const defender1TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 const defender2TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 const supporterTemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
-  '2. Visor': { x: 0, y: 300 },
-  '3. Vest': { x: 450, y: 300 },
-  '4. Armguard': { x: 0, y: 420 },
-  '5. Boots': { x: 450, y: 420 },
-  '6. Skill': { x: 670, y: 0 },
-  '7. Cube': { x: 800, y: 210 },
-  '8. Dolls': { x: 600, y: 265 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
 };
 
 
 
-const FIXED_CANVAS_WIDTH = 900;
-const FIXED_CANVAS_HEIGHT = 540;
+const FIXED_CANVAS_WIDTH = 1275;
+const FIXED_CANVAS_HEIGHT = 900;
 
 function App() {
   const [selectedImages, setSelectedImages] = useState({});
