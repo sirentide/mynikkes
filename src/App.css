@@ -198,7 +198,7 @@ h1 {
   display: flex; /* Align button and text vertically */
   flex-direction: column; /* Stack button and text vertically */
   align-items: center; /* Center-align button and text */
-  width: 150px; /* Fixed width for consistency */
+  width: 100px; /* Fixed width for consistency */
 }
 
 .mode-switch-item button {

@@ -7,7 +7,7 @@ import { throttle } from 'lodash';
 
 
 const attacker1CroppingAreas = {
-  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 735, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 735, width: 450, height: 120 },
@@ -29,7 +29,7 @@ const attacker2CroppingAreas = {
 };
 
 const attacker3CroppingAreas = {
-  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 735, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
@@ -40,7 +40,7 @@ const attacker3CroppingAreas = {
 };
 
 const attacker4CroppingAreas = {
-  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 695, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 695, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 695, width: 450, height: 120 },
@@ -51,7 +51,7 @@ const attacker4CroppingAreas = {
 };
 
 const defenderCroppingAreas = {
-  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 720, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 745, width: 450, height: 120 },
@@ -62,7 +62,7 @@ const defenderCroppingAreas = {
 };
 
 const defender1CroppingAreas = {
-  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 745, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 720, width: 450, height: 120 },
@@ -73,7 +73,7 @@ const defender1CroppingAreas = {
 };
 
 const defender2CroppingAreas = {
-  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 745, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 745, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 745, width: 450, height: 120 },
@@ -84,11 +84,22 @@ const defender2CroppingAreas = {
 };
 
 const supporterCroppingAreas = {
-  '1. Portrait': { left: 600, top: 110, width: 1400, height: 540 },
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
   '2. Visor': { left: 735, top: 710, width: 450, height: 120 },
   '3. Vest': { left: 735, top: 710, width: 450, height: 120 },
   '4. Armguard': { left: 735, top: 710, width: 450, height: 120 },
   '5. Boots': { left: 735, top: 710, width: 450, height: 120 },
+  '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
+  '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
+  '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
+};
+
+const supporter1CroppingAreas = {
+  '1. Portrait': { left: 600, top: 110, width: 1400, height: 900 },
+  '2. Visor': { left: 735, top: 720, width: 450, height: 120 },
+  '3. Vest': { left: 735, top: 720, width: 450, height: 120 },
+  '4. Armguard': { left: 735, top: 720, width: 450, height: 120 },
+  '5. Boots': { left: 735, top: 720, width: 450, height: 120 },
   '6. Skill': { left: 1610, top: 740, width: 230, height: 180 },
   '7. Cube': { left: 1685, top: 735, width: 100, height: 90 },
   '8. Dolls': { left: 710, top: 720, width: 200, height: 35 },
@@ -173,6 +184,17 @@ const defender2TemplateLayout = {
 };
 
 const supporterTemplateLayout = {
+  '1. Portrait': { x: 0, y: 0 },
+  '2. Visor': { x: 0, y: 660 },
+  '3. Vest': { x: 450, y: 660 },
+  '4. Armguard': { x: 0, y: 780 },
+  '5. Boots': { x: 450, y: 780 },
+  '6. Skill': { x: 670, y: 360 },
+  '7. Cube': { x: 800, y: 570 },
+  '8. Dolls': { x: 600, y: 625 },
+};
+
+const supporter1TemplateLayout = {
   '1. Portrait': { x: 0, y: 0 },
   '2. Visor': { x: 0, y: 660 },
   '3. Vest': { x: 450, y: 660 },
@@ -286,7 +308,8 @@ function App() {
       currentMode === 'defender' ? defenderCroppingAreas :
       currentMode === 'defender1' ? defender1CroppingAreas :
       currentMode === 'defender2' ? defender2CroppingAreas :
-      supporterCroppingAreas)[key];
+      currentMode === 'supporter' ? supporterCroppingAreas :
+      supporter1CroppingAreas)[key];
   
     if (cropArea) {
       cropper.setData({
@@ -370,7 +393,9 @@ function App() {
         ? defender1TemplateLayout
         : currentMode === 'defender2'
         ? defender2TemplateLayout
-        : supporterTemplateLayout;
+        : currentMode === 'supporter'
+        ? supporterTemplateLayout
+        : supporter1TemplateLayout;
 
     const croppingAreas = currentMode === 'attacker1'
         ? attacker1CroppingAreas
@@ -386,7 +411,9 @@ function App() {
         ? defender1CroppingAreas
         : currentMode === 'defender2'
         ? defender2CroppingAreas
-        : supporterCroppingAreas;
+        : currentMode === 'supporter'
+        ? supporterCroppingAreas
+        : supporter1CroppingAreas;
 
     let imagesProcessed = 0;
 
@@ -598,7 +625,17 @@ function App() {
     >
       S 1111
     </button>
-    <p className="upload-instructions3">Liter, Asuka, S.Sukura</p>
+    <p className="upload-instructions3">Liter, Asuka, S.Sukura, Naga</p>
+  </div>
+
+  <div className="mode-switch-item">
+    <button
+      onClick={() => handleModeSelection('supporter1')}
+      className={currentMode === 'supporter' ? 'active' : ''}
+    >
+      S 2222
+    </button>
+    <p className="upload-instructions3">Jackal</p>
   </div>
 
   <div className="mode-switch-item">
